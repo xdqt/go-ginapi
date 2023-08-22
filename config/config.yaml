@@ -1,0 +1,10 @@
+Mysql:
+  Host: 192.168.214.134
+  Port: 3306
+  UserName: ellis
+  Password: ellis
+  Database: go_db
+  Charset: utf8mb4
+  ParseTime: true
+  loc: Local
+JWTSecret: nidaye

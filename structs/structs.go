@@ -30,3 +30,19 @@ type Tabler interface {
 func (recv User) TableName() string {
 	return "ellis_user"
 }
+
+type YamlStruct struct {
+	Mysql     Mysql  `yaml:"Mysql"`
+	JWTSecret string `yaml:"JWTSecret"`
+}
+
+type Mysql struct {
+	Host      string `yaml:"Host"`
+	Port      int    `yaml:"Port"`
+	UserName  string `yaml:"UserName"`
+	Password  string `yaml:"Password"`
+	Database  string `yaml:"Database"`
+	Charset   string `yaml:"Charset"`
+	ParseTime bool   `yaml:"ParseTime"`
+	loc       string `yaml:"loc"`
+}
