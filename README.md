@@ -18,6 +18,8 @@ go get -u gorm.io/gen //orm 框架
 go get -u github.com/gin-gonic/gin
 //jwt 框架
 go get -u github.com/dgrijalva/jwt-go
+//yaml解析
+go get gopkg.in/yaml.v3
 ```
 4. 项目结构介绍
 - controllers 包包含了所有路由对应的函数
