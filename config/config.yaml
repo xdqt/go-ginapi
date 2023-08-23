@@ -6,5 +6,5 @@ Mysql:
   Database: go_db
   Charset: utf8mb4
   ParseTime: true
-  loc: Local
+  Loc: Local
 JWTSecret: nidaye

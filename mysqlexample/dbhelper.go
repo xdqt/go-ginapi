@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"ginapi/structs"
 	tokentool "ginapi/utils/token"
-	"io/ioutil"
+	"os"
 
 	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
@@ -15,7 +15,7 @@ import (
 var db *gorm.DB
 
 func readConf(filename string) (*structs.YamlStruct, error) {
-	buf, err := ioutil.ReadFile(filename)
+	buf, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -25,8 +25,6 @@ func readConf(filename string) (*structs.YamlStruct, error) {
 	if err != nil {
 		return nil, fmt.Errorf("in file %q: %w", filename, err)
 	}
-	fmt.Printf("c: %v\n", c)
-	fmt.Printf("c.Mysql.Host: %v\n", c.Mysql.Host)
 	return &c, err
 }
 

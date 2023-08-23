@@ -44,5 +44,5 @@ type Mysql struct {
 	Database  string `yaml:"Database"`
 	Charset   string `yaml:"Charset"`
 	ParseTime bool   `yaml:"ParseTime"`
-	loc       string `yaml:"loc"`
+	Loc       string `yaml:"Loc"`
 }
