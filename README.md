@@ -20,6 +20,10 @@ go get -u github.com/gin-gonic/gin
 go get -u github.com/dgrijalva/jwt-go
 //yaml解析
 go get gopkg.in/yaml.v3
+//判断slice是否包含某个数值
+go get golang.org/x/exp/slices
+// s3 sdk
+go get github.com/aws/aws-sdk-go/service/s3
 ```
 4. 项目结构介绍
 - controllers 包包含了所有路由对应的函数
