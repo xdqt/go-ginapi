@@ -2,6 +2,7 @@ package ossexample
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"time"
@@ -71,6 +72,17 @@ func UploadFile(filename string, bucketname string, destination string) {
 		Bucket: aws.String(bucketname),
 		Key:    aws.String(destination),
 		Body:   f,
+	}
+	uploader.Upload(upParams)
+}
+
+// 上传文件注意bucket以/开头
+func UploadFileObj(filename io.Reader, bucketname string, destination string) {
+
+	upParams := &s3manager.UploadInput{
+		Bucket: aws.String(bucketname),
+		Key:    aws.String(destination),
+		Body:   filename,
 	}
 	uploader.Upload(upParams)
 }

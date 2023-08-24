@@ -6,6 +6,8 @@ import (
 	"ginapi/utils/token"
 	"net/http"
 
+	"ginapi/ossexample"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -78,4 +80,22 @@ func CurrentUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "success", "data": user})
+}
+
+func UploadFile(c *gin.Context) {
+
+	file, err := c.FormFile("file")
+	bucketname := c.PostForm("bucketname")
+	// c.SaveUploadedFile(file, file.Filename)
+	// key := c.PostForm("key")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+	f, err2 := file.Open()
+	if err2 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+	ossexample.UploadFileObj(f, bucketname, file.Filename)
+	f.Close()
+	c.JSON(http.StatusOK, gin.H{"meta": "success"})
 }
