@@ -99,3 +99,24 @@ func UploadFile(c *gin.Context) {
 	f.Close()
 	c.JSON(http.StatusOK, gin.H{"meta": "success"})
 }
+
+func BodyToStruct(c *gin.Context) {
+	var json structs.EsQuery
+	if err := c.ShouldBind(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"value": json})
+	}
+}
+
+func BodyToMap(c *gin.Context) {
+	// var json structs.EsQuery
+	var json map[string]interface{}
+	if err := c.ShouldBind(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"value": json})
+	}
+}

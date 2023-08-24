@@ -46,3 +46,8 @@ type Mysql struct {
 	ParseTime bool   `yaml:"ParseTime"`
 	Loc       string `yaml:"Loc"`
 }
+
+type EsQuery struct {
+	Country   string `json:"country"`
+	EmailAddr string `json:"emailAddr"`
+}

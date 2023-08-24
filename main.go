@@ -27,6 +27,8 @@ func main() {
 	protected.Use(middlewares.JwtAuthMiddleware())
 	protected.GET("/user", controllers.CurrentUser)
 	protected.POST("/upload", controllers.UploadFile)
+	protected.POST("/bodytostruct", controllers.BodyToStruct)
+	protected.POST("/bodytomap", controllers.BodyToMap)
 
 	for _, item := range r.Routes() {
 		println("method:", item.Method, "path:", item.Path)
