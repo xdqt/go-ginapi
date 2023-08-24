@@ -24,6 +24,8 @@ go get gopkg.in/yaml.v3
 go get golang.org/x/exp/slices
 // s3 sdk
 go get github.com/aws/aws-sdk-go/service/s3
+// elasticsearch sdk
+go get -u github.com/elastic/go-elasticsearch/v7
 ```
 4. 项目结构介绍
 - controllers 包包含了所有路由对应的函数
