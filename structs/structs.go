@@ -1,6 +1,7 @@
 package structs
 
 import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"gorm.io/gorm"
 )
 
@@ -50,4 +51,10 @@ type Mysql struct {
 type EsQuery struct {
 	Country   string `json:"country"`
 	EmailAddr string `json:"emailAddr"`
+}
+
+type MongoStruct struct {
+	Id       primitive.ObjectID `bson:"_id"`
+	UserName string             `bson:"username"`
+	Email    string             `bson:"email"`
 }
