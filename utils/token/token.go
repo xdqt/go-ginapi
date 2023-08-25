@@ -24,7 +24,7 @@ func GenerateToken(user_id uint) (string, error) {
 
 }
 
-func TokenValid(c *gin.Context) error {
+func TokenValid(c *gin.Context) (error, string) {
 	tokenString := ExtractToken(c)
 	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -33,9 +33,13 @@ func TokenValid(c *gin.Context) error {
 		return []byte("nidaye"), nil
 	})
 	if err != nil {
-		return err
+		return err, ""
 	}
-	return nil
+	u, _ := ExtractTokenID(c)
+
+	newtoken, _ := GenerateToken(u)
+
+	return nil, newtoken
 }
 
 func ExtractToken(c *gin.Context) string {
