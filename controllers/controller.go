@@ -148,3 +148,13 @@ func DynamicParams(c *gin.Context) {
 	fmt.Printf("book: %v\n", book)
 	c.JSON(http.StatusOK, gin.H{"user": user, "book": book})
 }
+
+func Validation(c *gin.Context) {
+	var user structs.UserInfo
+	err := c.ShouldBindJSON(&user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, user)
+	}
+}

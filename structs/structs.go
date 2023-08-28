@@ -58,3 +58,10 @@ type MongoStruct struct {
 	UserName string             `bson:"username"`
 	Email    string             `bson:"email"`
 }
+
+type UserInfo struct {
+	UserName  string `json:"username" binding:"required,min=4,max=6"`
+	Age       int    `json:"age" binding:"gt=18,lte=120"`
+	Password  string `json:"password" binding:"required"`
+	Password2 string `json:"password2" binding:"required,eqfield=Password"`
+}

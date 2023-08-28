@@ -38,7 +38,7 @@ func main() {
 	// 动态参数
 	testquery.GET("dynamicparams/:user_id/:book_id", controllers.DynamicParams)
 	// http://localhost:8080/query/dynamicparams/1/1
-
+	testquery.POST("/validation", controllers.Validation)
 	for _, item := range r.Routes() {
 		println("method:", item.Method, "path:", item.Path)
 	}
