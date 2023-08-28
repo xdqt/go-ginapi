@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"ginapi/mysqlexample"
 	"ginapi/structs"
 	"ginapi/utils/token"
@@ -119,4 +120,31 @@ func BodyToMap(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{"value": json})
 	}
+}
+
+func RedirectLink(c *gin.Context) {
+	c.Redirect(http.StatusTemporaryRedirect, "https://www.baidu.com")
+}
+
+func GetQuery(c *gin.Context) {
+	s, ok := c.GetQuery("name")
+	if ok {
+		fmt.Printf("s: %v\n", s)
+	} else {
+		fmt.Println("没有传递这个参数")
+	}
+
+	values, _ := c.GetQueryArray("arrayfield")
+
+	fmt.Printf("values: %v\n", values)
+
+	c.JSON(http.StatusOK, gin.H{"name": s})
+}
+
+func DynamicParams(c *gin.Context) {
+	user := c.Param("user_id")
+	fmt.Printf("user: %v\n", user)
+	book := c.Param("book_id")
+	fmt.Printf("book: %v\n", book)
+	c.JSON(http.StatusOK, gin.H{"user": user, "book": book})
 }
