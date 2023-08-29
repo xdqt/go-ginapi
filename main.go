@@ -7,9 +7,8 @@ import (
 
 	"ginapi/controllers"
 
-	"ginapi/middlewares"
-
 	"ginapi/ossexample"
+	"ginapi/router"
 )
 
 func main() {
@@ -18,18 +17,8 @@ func main() {
 	ossexample.InitS3()
 	r := gin.Default()
 	r.MaxMultipartMemory = 8 << 20 // 8 MiB
-	public := r.Group("/api")
-	public.POST("/register", controllers.Register)
-	public.POST("/login", controllers.Login)
-	public.GET("/baidu", controllers.RedirectLink)
-
-	protected := r.Group("/admin")
-	//中间件
-	protected.Use(middlewares.JwtAuthMiddleware())
-	protected.GET("/user", controllers.CurrentUser)
-	protected.POST("/upload", controllers.UploadFile)
-	protected.POST("/bodytostruct", controllers.BodyToStruct)
-	protected.POST("/bodytomap", controllers.BodyToMap)
+	router.PublicRouter(r)
+	router.ProtectRouter(r)
 
 	testquery := r.Group("/query")
 	// 查询参数
