@@ -60,8 +60,8 @@ type MongoStruct struct {
 }
 
 type UserInfo struct {
-	UserName  string `json:"username" binding:"required,min=4,max=6"`
-	Age       int    `json:"age" binding:"gt=18,lte=120"`
-	Password  string `json:"password" binding:"required"`
-	Password2 string `json:"password2" binding:"required,eqfield=Password"`
+	UserName  string `json:"username" binding:"required,min=4,max=6" msg:"username验证失败"`
+	Age       int    `json:"age" binding:"gt=18,lte=120" msg:"age验证失败"`
+	Password  string `json:"password" binding:"required" msg:"密码验证失败"`
+	Password2 string `json:"password2" binding:"required,eqfield=Password" msg:"必填且需要与password一致"`
 }

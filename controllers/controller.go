@@ -6,10 +6,12 @@ import (
 	"ginapi/structs"
 	"ginapi/utils/token"
 	"net/http"
+	"reflect"
 
 	"ginapi/ossexample"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 // func PublicRoutes(route *gin.RouterGroup) {
@@ -156,5 +158,37 @@ func Validation(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, user)
+	}
+}
+
+func CustomError(err error, obj any) map[string]string {
+	var errors map[string]string = make(map[string]string)
+
+	getObj := reflect.TypeOf(obj)
+	if errs, ok := err.(validator.ValidationErrors); ok {
+		for _, v := range errs {
+			if sf, exist := getObj.Elem().FieldByName(v.Field()); exist {
+				errors[v.Field()] = sf.Tag.Get("msg")
+			}
+		}
+		return errors
+	} else {
+		return nil
+	}
+
+}
+
+func Validationcustomerror(c *gin.Context) {
+	var user structs.UserInfo
+	err := c.ShouldBindJSON(&user)
+	if err != nil {
+		errors := CustomError(err, &user)
+		if errors != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"errors": errors})
+		} else {
+			c.JSON(http.StatusOK, gin.H{"MSG": user})
+		}
+	} else {
+		c.JSON(http.StatusOK, gin.H{"MSG": user})
 	}
 }

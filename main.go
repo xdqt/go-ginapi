@@ -39,6 +39,8 @@ func main() {
 	testquery.GET("dynamicparams/:user_id/:book_id", controllers.DynamicParams)
 	// http://localhost:8080/query/dynamicparams/1/1
 	testquery.POST("/validation", controllers.Validation)
+
+	testquery.POST("/validationcustomerror", controllers.Validationcustomerror)
 	for _, item := range r.Routes() {
 		println("method:", item.Method, "path:", item.Path)
 	}
