@@ -217,3 +217,47 @@ func Delete() {
 		fmt.Printf("string(vv): %v\n", string(vv))
 	}
 }
+
+// search after
+func SearchAfter() {
+	query := `{
+		"query": {
+		  "match_all": {}
+		},
+		"sort": [
+		  {
+			"_id": {
+			  "order": "desc"
+			}
+		  }
+		],
+		"size": 1,
+		"search_after":["3"]
+	  }`
+	res, err := es_client.Search(
+		es_client.Search.WithIndex("ellis"),
+		es_client.Search.WithBody(strings.NewReader(query)),
+	)
+	if err != nil {
+		log.Fatalf("Error getting response: %s", err)
+	}
+	defer res.Body.Close()
+
+	var r map[string]interface{}
+	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
+		log.Fatalf("Error parsing the response body: %s", err)
+	}
+	// Print the response status, number of results, and request duration.
+	log.Printf(
+		"[%s] %d hits; took: %dms",
+		res.Status(),
+		int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64)),
+		int(r["took"].(float64)),
+	)
+	// Print the ID and document source for each hit.
+	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
+		log.Printf(" * ID=%s, %s", hit.(map[string]interface{})["_id"], hit.(map[string]interface{})["_source"])
+	}
+
+	log.Println(strings.Repeat("=", 37))
+}

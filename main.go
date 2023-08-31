@@ -21,6 +21,7 @@ func main() {
 	// esexample.IndexOneDocument()
 	esexample.UpdateByQuery()
 	esexample.Delete()
+	esexample.SearchAfter()
 	r := gin.Default()
 	r.MaxMultipartMemory = 8 << 20 // 8 MiB
 	router.PublicRouter(r)
