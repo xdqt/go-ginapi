@@ -7,6 +7,7 @@ import (
 
 	"ginapi/controllers"
 
+	"ginapi/esexample"
 	"ginapi/ossexample"
 	"ginapi/router"
 )
@@ -15,6 +16,11 @@ func main() {
 	//数据库初始化以及建表
 	mysqlexample.Initdb()
 	ossexample.InitS3()
+	esexample.InitEs()
+	esexample.SearchByDSL()
+	// esexample.IndexOneDocument()
+	esexample.UpdateByQuery()
+	esexample.Delete()
 	r := gin.Default()
 	r.MaxMultipartMemory = 8 << 20 // 8 MiB
 	router.PublicRouter(r)
