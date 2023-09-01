@@ -99,7 +99,7 @@ func UploadFile(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
 	ossexample.UploadFileObj(f, bucketname, file.Filename)
-	f.Close()
+	defer f.Close()
 	c.JSON(http.StatusOK, gin.H{"meta": "success"})
 }
 

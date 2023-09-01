@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"ginapi/mysqlexample"
+	"io"
+	"os"
 
 	"github.com/gin-gonic/gin"
 
@@ -22,7 +25,12 @@ func main() {
 	// esexample.UpdateByQuery()
 	// esexample.Delete()
 	// esexample.SearchAfter()
-	esexample.Scroll()
+	value := esexample.CalculateIndexDocCount()
+	fmt.Printf("value: %v\n", value)
+
+	file, _ := os.Create("ellis.log")
+	gin.DefaultWriter = io.MultiWriter(file, os.Stdout)
+
 	r := gin.Default()
 	r.MaxMultipartMemory = 8 << 20 // 8 MiB
 	router.PublicRouter(r)

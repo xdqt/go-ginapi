@@ -1,0 +1,21 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] POST   /api/register             --> ginapi/controllers.Register (3 handlers)
+[GIN-debug] POST   /api/login                --> ginapi/controllers.Login (3 handlers)
+[GIN-debug] GET    /api/baidu                --> ginapi/controllers.RedirectLink (3 handlers)
+[GIN-debug] GET    /admin/user               --> ginapi/controllers.CurrentUser (4 handlers)
+[GIN-debug] POST   /admin/upload             --> ginapi/controllers.UploadFile (4 handlers)
+[GIN-debug] POST   /admin/bodytostruct       --> ginapi/controllers.BodyToStruct (4 handlers)
+[GIN-debug] POST   /admin/bodytomap          --> ginapi/controllers.BodyToMap (4 handlers)
+[GIN-debug] POST   /es/get                   --> ginapi/esexample.DynamicDSL (3 handlers)
+[GIN-debug] GET    /query/getquery           --> ginapi/controllers.GetQuery (3 handlers)
+[GIN-debug] GET    /query/dynamicparams/:user_id/:book_id --> ginapi/controllers.DynamicParams (3 handlers)
+[GIN-debug] POST   /query/validation         --> ginapi/controllers.Validation (3 handlers)
+[GIN-debug] POST   /query/validationcustomerror --> ginapi/controllers.Validationcustomerror (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080

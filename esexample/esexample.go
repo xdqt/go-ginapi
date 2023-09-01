@@ -45,17 +45,25 @@ func ListIndex() {
 
 // 查询索引文档个数
 func CalculateIndexDocCount() float64 {
-	res, err := esapi.CountRequest{Index: []string{"ellis"}}.Do(context.Background(), es_client)
+	// res, err := esapi.CountRequest{Index: []string{"ellis"}}.Do(context.Background(), es_client)
+	// if err != nil {
+	// 	return 0
+	// }
+	// defer res.Body.Close()
+	// var resMap map[string]interface{}
+	// json.NewDecoder(res.Body).Decode(&resMap)
+	// fmt.Printf("resMap: %v\n", resMap["count"])
+	// // fmt.Printf("res.Header: %v\n", res.Header)
+	// // fmt.Println(res.String())
+	// return resMap["count"].(float64)
+
+	r, err := es_client.Count(es_client.Count.WithIndex("ellis"))
 	if err != nil {
-		return 0
+		fmt.Printf("err: %v\n", err)
 	}
-	defer res.Body.Close()
-	var resMap map[string]interface{}
-	json.NewDecoder(res.Body).Decode(&resMap)
-	fmt.Printf("resMap: %v\n", resMap["count"])
-	// fmt.Printf("res.Header: %v\n", res.Header)
-	// fmt.Println(res.String())
-	return resMap["count"].(float64)
+	var value map[string]interface{}
+	json.NewDecoder(r.Body).Decode(&value)
+	return value["count"].(float64)
 }
 
 // 插入一个文档
@@ -366,7 +374,7 @@ func DynamicDSL(c *gin.Context) {
 	}
 
 	res, err := esquery.Search().
-		Query(boolquery).Run(es_client, es_client.Search.WithIndex("ellis"))
+		Query(boolquery).Sort("_id", esquery.OrderDesc).Run(es_client, es_client.Search.WithIndex("ellis"))
 	if err != nil {
 		fmt.Printf("err: %v\n", err)
 	}
@@ -375,6 +383,6 @@ func DynamicDSL(c *gin.Context) {
 
 	b, _ := json.Marshal(value)
 	stringjson := string(b)
-	fmt.Printf("gjson.Get(stringjson, \"hits.hits.#._id\"): %v\n", gjson.Get(stringjson, "hits.hits.#._id"))
+	log.Println("gjson.Get(stringjson, \"hits.hits.#._id\"):\n", gjson.Get(stringjson, "hits.hits.#._id"))
 	defer res.Body.Close()
 }
