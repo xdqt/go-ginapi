@@ -26,6 +26,8 @@ go get golang.org/x/exp/slices
 go get github.com/aws/aws-sdk-go/service/s3
 // elasticsearch sdk
 go get -u github.com/elastic/go-elasticsearch/v7
+// elasticsearch dsl
+go get "github.com/aquasecurity/esquery"
 //操作json
 go get "github.com/tidwall/gjson"
 
