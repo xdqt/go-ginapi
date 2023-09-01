@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
+	"github.com/tidwall/gjson"
 )
 
 var es_client *elasticsearch.Client
@@ -260,4 +262,76 @@ func SearchAfter() {
 	}
 
 	log.Println(strings.Repeat("=", 37))
+}
+
+// scroll 查询
+func Scroll() {
+	query := `{
+			"query": {
+			"match_all": {}
+			}
+		}`
+	log.Println("Scrolling the index...")
+	log.Println(strings.Repeat("-", 80))
+	res, err := es_client.Search(
+		es_client.Search.WithBody(strings.NewReader(query)),
+		es_client.Search.WithIndex("ellis"),
+		// es_client.Search.WithSort("_doc"),
+		es_client.Search.WithSize(1),
+		es_client.Search.WithScroll(time.Minute),
+	)
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+	}
+	var mapvalue map[string]interface{}
+	json.NewDecoder(res.Body).Decode(&mapvalue)
+	value1, _ := json.Marshal(mapvalue)
+	jsonvalue := string(value1)
+
+	defer res.Body.Close()
+
+	scrollID := gjson.Get(jsonvalue, "_scroll_id").String()
+
+	log.Println("ScrollID", scrollID)
+	log.Println("IDs     ", gjson.Get(jsonvalue, "hits.hits.#._id"))
+	log.Println(strings.Repeat("-", 80))
+	for _, hit := range mapvalue["hits"].(map[string]interface{})["hits"].([]interface{}) {
+		log.Printf(" * ID=%s, %s", hit.(map[string]interface{})["_id"], hit.(map[string]interface{})["_source"])
+	}
+
+	for {
+		// Perform the scroll request and pass the scrollID and scroll duration
+		//
+		res, err := es_client.Scroll(es_client.Scroll.WithScrollID(scrollID), es_client.Scroll.WithScroll(time.Minute))
+		if err != nil {
+			log.Fatalf("Error: %s", err)
+		}
+		if res.IsError() {
+			log.Fatalf("Error response: %s", res)
+		}
+
+		defer res.Body.Close()
+
+		// Extract the scrollID from response
+		var mapvalue map[string]interface{}
+		json.NewDecoder(res.Body).Decode(&mapvalue)
+		value1, _ := json.Marshal(mapvalue)
+		jsonvalue := string(value1)
+		scrollID = gjson.Get(jsonvalue, "_scroll_id").String()
+
+		hits := gjson.Get(jsonvalue, "hits.hits")
+
+		if len(hits.Array()) < 1 {
+			log.Println("Finished scrolling")
+			break
+		} else {
+			log.Println("ScrollID", scrollID)
+			log.Println("IDs     ", gjson.Get(hits.Raw, "#._id"))
+			log.Println(strings.Repeat("-", 80))
+			for _, v := range hits.Array() {
+				fmt.Printf("v.Raw: %v\n", v.Raw)
+			}
+		}
+	}
+
 }
