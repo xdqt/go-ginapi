@@ -9,8 +9,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aquasecurity/esquery"
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
+	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 )
 
@@ -27,6 +29,7 @@ func InitEs() {
 	}
 
 	es_client, _ = elasticsearch.NewClient(cfg)
+	boolquery = &esquery.BoolQuery{}
 }
 
 // 列出索引
@@ -334,4 +337,44 @@ func Scroll() {
 		}
 	}
 
+}
+
+var boolquery *esquery.BoolQuery
+
+func DynamicDSL(c *gin.Context) {
+
+	var body []Dynamic
+	err := c.ShouldBindJSON(&body)
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+	} else {
+		if len(body) > 1 {
+			for _, v := range body {
+				if v.Operation == "=" {
+					boolquery.Should(esquery.Term(v.Field, v.Value))
+				}
+			}
+			boolquery.MinimumShouldMatch(1)
+		} else {
+			for _, v := range body {
+				if v.Operation == "=" {
+					boolquery.Must(esquery.Term(v.Field, v.Value))
+				}
+			}
+		}
+
+	}
+
+	res, err := esquery.Search().
+		Query(boolquery).Run(es_client, es_client.Search.WithIndex("ellis"))
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+	}
+	var value map[string]interface{}
+	json.NewDecoder(res.Body).Decode(&value)
+
+	b, _ := json.Marshal(value)
+	stringjson := string(b)
+	fmt.Printf("gjson.Get(stringjson, \"hits.hits.#._id\"): %v\n", gjson.Get(stringjson, "hits.hits.#._id"))
+	defer res.Body.Close()
 }

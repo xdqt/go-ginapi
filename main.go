@@ -27,6 +27,7 @@ func main() {
 	r.MaxMultipartMemory = 8 << 20 // 8 MiB
 	router.PublicRouter(r)
 	router.ProtectRouter(r)
+	router.EsRouter(r)
 
 	testquery := r.Group("/query")
 	// 查询参数

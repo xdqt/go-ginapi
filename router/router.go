@@ -2,6 +2,7 @@ package router
 
 import (
 	"ginapi/controllers"
+	"ginapi/esexample"
 	"ginapi/middlewares"
 
 	"github.com/gin-gonic/gin"
@@ -22,4 +23,9 @@ func ProtectRouter(c *gin.Engine) {
 	protected.POST("/upload", controllers.UploadFile)
 	protected.POST("/bodytostruct", controllers.BodyToStruct)
 	protected.POST("/bodytomap", controllers.BodyToMap)
+}
+
+func EsRouter(c *gin.Engine) {
+	public := c.Group("/es")
+	public.POST("/get", esexample.DynamicDSL)
 }
