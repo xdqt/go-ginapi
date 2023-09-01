@@ -3,6 +3,7 @@ package main
 import (
 	"ginapi/mysqlexample"
 	"io"
+	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,13 @@ import (
 )
 
 func main() {
+
+	file, _ := os.OpenFile("ellis.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0777)
+	gin.DefaultWriter = io.MultiWriter(file, os.Stdout)
+	log.SetOutput(file)
+	defer file.Close()
+	// optional: log date-time, filename, and line number
+	log.SetFlags(log.Lshortfile | log.LstdFlags)
 	//数据库初始化以及建表
 	mysqlexample.Initdb()
 	ossexample.InitS3()
@@ -25,9 +33,6 @@ func main() {
 	// esexample.Delete()
 	// esexample.SearchAfter()
 	esexample.SearchAfterSecond()
-
-	file, _ := os.Create("ellis.log")
-	gin.DefaultWriter = io.MultiWriter(file, os.Stdout)
 
 	r := gin.Default()
 	r.MaxMultipartMemory = 8 << 20 // 8 MiB

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"ginapi/structs"
 	tokentool "ginapi/utils/token"
+	"log"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -35,7 +36,10 @@ func Initdb() {
 	// _path := filepath.Join(str, "config", "config.yaml")
 	// fmt.Printf("_path: %v\n", _path)
 
-	c, _ := readConf("./config/config.yaml")
+	c, errs := readConf("./config/config.yaml")
+	if errs != nil {
+		log.Println(errs.Error())
+	}
 
 	dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=%v&parseTime=%v&loc=Local", c.Mysql.UserName, c.Mysql.Password, c.Mysql.Host, c.Mysql.Port, c.Mysql.Database, c.Mysql.Charset, c.Mysql.ParseTime)
 
