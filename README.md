@@ -26,6 +26,8 @@ go get golang.org/x/exp/slices
 go get github.com/aws/aws-sdk-go/service/s3
 // elasticsearch sdk
 go get -u github.com/elastic/go-elasticsearch/v7
+//操作json
+go get "github.com/tidwall/gjson"
 
 go get go.mongodb.org/mongo-driver/mongo
 ```
