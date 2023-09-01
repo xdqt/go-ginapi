@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"ginapi/mysqlexample"
 	"io"
 	"os"
@@ -25,8 +24,7 @@ func main() {
 	// esexample.UpdateByQuery()
 	// esexample.Delete()
 	// esexample.SearchAfter()
-	value := esexample.CalculateIndexDocCount()
-	fmt.Printf("value: %v\n", value)
+	esexample.SearchAfterSecond()
 
 	file, _ := os.Create("ellis.log")
 	gin.DefaultWriter = io.MultiWriter(file, os.Stdout)

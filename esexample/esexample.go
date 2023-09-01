@@ -386,3 +386,18 @@ func DynamicDSL(c *gin.Context) {
 	log.Println("gjson.Get(stringjson, \"hits.hits.#._id\"):\n", gjson.Get(stringjson, "hits.hits.#._id"))
 	defer res.Body.Close()
 }
+
+func SearchAfterSecond() {
+
+	res, err := esquery.Search().Query(esquery.MatchAll()).Sort("_id", esquery.OrderDesc).SearchAfter("3").Size(1).Run(es_client, es_client.Search.WithIndex("ellis"))
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+	}
+	var value map[string]interface{}
+	json.NewDecoder(res.Body).Decode(&value)
+
+	b, _ := json.Marshal(value)
+	stringjson := string(b)
+	log.Println("gjson.Get(stringjson, \"hits.hits.#._id\"):\n", gjson.Get(stringjson, "hits.hits.#._id"))
+	defer res.Body.Close()
+}
