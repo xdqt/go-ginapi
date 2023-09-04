@@ -455,7 +455,7 @@ func NestedQueryVersion2() {
 	body["query"] = make(map[string]interface{})
 
 	_, ok := body["query"].(map[string]interface{})["nested"]
-	fmt.Printf("ok: %v\n", ok)
+	fmt.Printf("ok: 是否存在个key%v\n", ok)
 
 	body["query"].(map[string]interface{})["nested"] = make(map[string]interface{})
 	body["query"].(map[string]interface{})["nested"].(map[string]interface{})["path"] = "testfield"
