@@ -32,7 +32,7 @@ func main() {
 	// esexample.UpdateByQuery()
 	// esexample.Delete()
 	// esexample.SearchAfter()
-	esexample.SearchAfterSecond()
+	esexample.NestedQueryVersion2()
 
 	r := gin.Default()
 	r.MaxMultipartMemory = 8 << 20 // 8 MiB

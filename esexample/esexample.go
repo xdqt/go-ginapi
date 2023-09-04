@@ -401,3 +401,78 @@ func SearchAfterSecond() {
 	log.Println("gjson.Get(stringjson, \"hits.hits.#._id\"):\n", gjson.Get(stringjson, "hits.hits.#._id"))
 	defer res.Body.Close()
 }
+
+func NestedQueryVersion1() {
+	/*
+		{
+			"query": {
+				"nested": {
+				"path": "testfield",
+				"query": {
+					"term": {
+					"testfield.field1": {
+						"value": "1"
+					}
+					}
+				}
+				}
+			}
+		}
+	*/
+	body := map[string]interface{}{"query": map[string]interface{}{"nested": map[string]interface{}{"path": "testfield", "query": map[string]interface{}{"term": map[string]interface{}{"testfield.field1": "1"}}}}}
+	var b bytes.Buffer
+	json.NewEncoder(&b).Encode(body)
+
+	r, _ := es_client.Search(es_client.Search.WithIndex("ellis"), es_client.Search.WithBody(&b))
+	var value map[string]interface{}
+	json.NewDecoder(r.Body).Decode(&value)
+
+	b1, _ := json.Marshal(value)
+	stringjson := string(b1)
+	fmt.Printf("gjson.Get(stringjson, \"hits.hits.#\"): %v\n", gjson.Get(stringjson, "hits.hits.#._source"))
+}
+
+func NestedQueryVersion2() {
+
+	/*
+		{
+			"query": {
+				"nested": {
+				"path": "testfield",
+				"query": {
+					"term": {
+					"testfield.field1": {
+						"value": "1"
+					}
+					}
+				}
+				}
+			}
+		}
+	*/
+	body := make(map[string]interface{})
+
+	body["query"] = make(map[string]interface{})
+
+	_, ok := body["query"].(map[string]interface{})["nested"]
+	fmt.Printf("ok: %v\n", ok)
+
+	body["query"].(map[string]interface{})["nested"] = make(map[string]interface{})
+	body["query"].(map[string]interface{})["nested"].(map[string]interface{})["path"] = "testfield"
+	body["query"].(map[string]interface{})["nested"].(map[string]interface{})["query"] = make(map[string]interface{})
+	body["query"].(map[string]interface{})["nested"].(map[string]interface{})["query"].(map[string]interface{})["term"] = make(map[string]interface{})
+	body["query"].(map[string]interface{})["nested"].(map[string]interface{})["query"].(map[string]interface{})["term"].(map[string]interface{})["testfield.field1"] = make(map[string]interface{})
+	body["query"].(map[string]interface{})["nested"].(map[string]interface{})["query"].(map[string]interface{})["term"].(map[string]interface{})["testfield.field1"].(map[string]interface{})["value"] = make(map[string]interface{})
+	body["query"].(map[string]interface{})["nested"].(map[string]interface{})["query"].(map[string]interface{})["term"].(map[string]interface{})["testfield.field1"].(map[string]interface{})["value"] = "1"
+
+	var b bytes.Buffer
+	json.NewEncoder(&b).Encode(body)
+
+	r, _ := es_client.Search(es_client.Search.WithIndex("ellis"), es_client.Search.WithBody(&b))
+	var value map[string]interface{}
+	json.NewDecoder(r.Body).Decode(&value)
+
+	b1, _ := json.Marshal(value)
+	stringjson := string(b1)
+	fmt.Printf("gjson.Get(stringjson, \"hits.hits.#\"): %v\n", gjson.Get(stringjson, "hits.hits.#._source"))
+}
